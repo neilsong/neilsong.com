@@ -1,0 +1,29 @@
+{
+  "name": "neilsong-com",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --bun concurrently bun:dev:*",
+    "dev:watch": "bun --watch run build.ts",
+    "dev:server": "bun --watch run server.ts",
+    "build": "bun build.ts",
+    "deploy": "wrangler deploy --minify",
+    "format": "prettier --write --experimental-cli ."
+  },
+  "devDependencies": {
+    "@prettier/plugin-oxc": "^0.0.4",
+    "@types/bun": "latest",
+    "concurrently": "^9.2.0",
+    "glob": "^11.0.0",
+    "gray-matter": "^4.0.3",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.2.0",
+    "remark": "^15.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-html": "^16.0.1",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.32.0"
+  },
+  "private": true
+}
