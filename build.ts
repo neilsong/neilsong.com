@@ -54,7 +54,9 @@ async function buildPages() {
 
       const homeContent = `<ul class="nav-list">\n        ${navLinks}\n      </ul>`;
 
-      page = template.replace("{{title}}", "Home").replace("{{content}}", homeContent);
+      page = template
+        .replace("{{title}}", "neil song")
+        .replace("{{content}}", homeContent);
     } else {
       page = template
         .replace("{{title}}", (data.title as string) || "Page")
