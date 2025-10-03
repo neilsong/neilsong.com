@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync, cpSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, cpSync, statSync } from "fs";
 import { glob } from "glob";
 import matter from "gray-matter";
 import { remark } from "remark";
@@ -10,6 +10,8 @@ import { dirname, basename } from "path";
 const processor = remark().use(remarkFrontmatter).use(remarkGfm).use(remarkHtml);
 
 const template = readFileSync("./src/layouts/base.html", "utf8");
+
+const SITE_URL = "https://neilsong.com";
 
 async function buildPages() {
   const files = await glob("./src/content/**/*.md");
@@ -76,8 +78,39 @@ async function buildPages() {
   }
 }
 
+async function buildSitemap() {
+  const files = await glob("./src/content/**/*.md");
+
+  const urls = files
+    .map((file) => {
+      const url = file
+        .replace("src/content/", "")
+        .replace(/\.md$/, "")
+        .replace(/index$/, "");
+
+      const stats = statSync(file);
+      const lastmod = stats.mtime.toISOString().split("T")[0];
+
+      return `  <url>
+    <loc>${SITE_URL}/${url}</loc>
+    <lastmod>${lastmod}</lastmod>
+  </url>`;
+    })
+    .join("\n");
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
+
+  const sitemapPath = "./dist/sitemap.xml";
+  writeFileSync(sitemapPath, sitemap);
+  console.log(`Built: ${sitemapPath}`);
+}
+
 try {
   await buildPages();
+  await buildSitemap();
 } catch (error) {
   console.error(error);
 }
